@@ -7,6 +7,7 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import { Provider as PaperProvider } from 'react-native-paper';
 import ViewNote from './src/screens/ViewNote';
+import AddNote from './src/screens/AddNote';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ const App = () => {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="ViewNote" component={ViewNote} />
+          <Stack.Screen name="AddNote" component={AddNote} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
