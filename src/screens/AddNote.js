@@ -10,6 +10,22 @@ const AddNote = ({ navigation }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
 
 
+  const handleSave = () => {
+    console.log("saved");
+  }
+
+
+  const handleCancel = () => {
+    clear();
+    navigation.navigate('Home');
+  }
+
+  const clear = () => {
+    setSelectedFiles([]);
+    setTitle('');
+    setDescription('');
+  }
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -34,11 +50,11 @@ const AddNote = ({ navigation }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.btnText}>Cancel</Text>
+          <TouchableOpacity style={styles.button} onPress={handleCancel}>
+            <Text style={styles.btnText} >Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.btnText}>Save</Text>
+          <TouchableOpacity style={styles.button} onPress={handleSave}>
+            <Text style={styles.btnText} >Save</Text>
           </TouchableOpacity>
         </View>
 
@@ -52,7 +68,9 @@ const AddNote = ({ navigation }) => {
           <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
           <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
         </View>
-
+        <TouchableOpacity style={[styles.button, {width: 130, alignSelf: 'center'}]} onPress={clear}>
+          <Text style={[styles.btnText, {alignSelf: 'center'}]} >Clear Images</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   )
@@ -90,13 +108,16 @@ const styles = StyleSheet.create({
     margin: 2
   },
   button: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 5,
-    margin: 15
+    margin: 15,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    backgroundColor: 'lightgray'
   },
   btnText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontWeight: '400',
   },
   buttonContainer: {
     flex: 1,
