@@ -1,14 +1,17 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { FAB } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const AddButton = () => {
+    const navigation = useNavigation();
+
     return (
         <View>
-            <FAB                
+            <FAB
                 icon="plus"
                 style={styles.fab}
-                onPress={() => console.log('Pressed')}
+                onPress={() => navigation.navigate('AddNote')}
                 variant="primary"
             />
         </View>
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 16,
         right: 10,
-        bottom: 10,           
+        bottom: 10,
     },
 })
 
