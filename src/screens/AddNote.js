@@ -32,16 +32,27 @@ const AddNote = ({ navigation }) => {
             multiline
           />
         </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.btnText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.btnText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity style={styles.imgInputButton}>
           <Icon name='image-multiple' size={40} />
         </TouchableOpacity>
         <View style={styles.imgPreview}>
-          <Avatar.Image style={styles.image} size={80} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={80} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={80} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={80} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={80} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
+          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
+          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
+          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
+          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
+          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
         </View>
+
       </ScrollView>
     </SafeAreaView>
   )
@@ -72,12 +83,26 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
     margin: 2
+  },
+  button: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    margin: 15
+  },
+  btnText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10
   }
 })
 
