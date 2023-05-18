@@ -12,6 +12,9 @@ const AddNote = ({ navigation }) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const titleCharacterLimit = 100;
+  const descriptionCharacterLimit = 450;
+
 
   const handleSelectImages = async () => {
 
@@ -47,17 +50,17 @@ const AddNote = ({ navigation }) => {
   const handleSave = () => {
     // setLoading(true);
     const formData = new FormData();
-    formData.append('title',title);
-    formData.append('description',description);
+    formData.append('title', title);
+    formData.append('description', description);
 
     const date = new Date();
     const newNoteDateTime = date.toLocaleString('en-US', {
       hour12: false,
-    });    
+    });
     formData.append("dateTime", newNoteDateTime);
 
-    for (let i = 0; i < selectedImages.length; i++) {      
-      formData.append('images',{
+    for (let i = 0; i < selectedImages.length; i++) {
+      formData.append('images', {
         uri: selectedImages[i].uri,
         type: selectedImages[i].type,
         name: selectedImages[i].fileName
@@ -81,22 +84,40 @@ const AddNote = ({ navigation }) => {
       <ScrollView>
         <View style={styles.noteInputContainer}>
           <Text style={styles.addNoteText}>Add Note</Text>
-          <TextInput
-            style={[styles.textInput, { fontWeight: '400' }]}
-            onChangeText={(text) => setTitle(text)}
-            value={title}
-            placeholder="Title"
-            keyboardType="default"
-            multiline
-          />
-          <TextInput
-            style={[styles.textInput, { fontWeight: '300' }]}
-            onChangeText={(text) => setDescription(text)}
-            value={description}
-            placeholder="Description"
-            keyboardType="default"
-            multiline
-          />
+          <View style={styles.inputSubContainer}>
+            <TextInput
+              style={[styles.textInput, { fontSize: 17, fontWeight: '500' }]}
+              onChangeText={(text) => {
+                if (text.length <= titleCharacterLimit) {
+                  setTitle(text);
+                }
+              }}
+              value={title}
+              placeholder="Title"
+              keyboardType="default"
+              autoCorrect={false}
+              autoCapitalize='none'
+              multiline
+            />
+            <Text style={styles.textCount}>{titleCharacterLimit-title.length} / {titleCharacterLimit}</Text>
+          </View>
+          <View style={styles.inputSubContainer}>
+            <TextInput
+              style={[styles.textInput, { fontSize: 16, fontWeight: '400' }]}
+              onChangeText={(text) => {
+                if (text.length <= descriptionCharacterLimit) {
+                  setDescription(text);
+                }
+              }}
+              value={description}
+              placeholder="Description"
+              keyboardType="default"
+              autoCorrect={false}
+              autoCapitalize='none'
+              multiline
+            />
+            <Text style={styles.textCount}>{descriptionCharacterLimit-description.length} / {descriptionCharacterLimit}</Text>
+          </View>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -133,23 +154,21 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     height: '100%',
-    backgroundColor: 'lightgray'
+    backgroundColor: '#fafaf0'
   },
   addNoteText: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginVertical: 20
+    marginVertical: 20,
+    textAlign: 'center',
   },
   noteInputContainer: {
     flex: 1,
-    alignItems: 'center',
-    padding: 10,
+    padding: 15,
   },
   textInput: {
-    width: '90%',
-    paddingHorizontal: 15,
-    marginVertical: 10,
-    fontSize: 16
+    width: '100%',
+    paddingHorizontal: 15,       
   },
   imgInputButton: {
     marginLeft: 35,
@@ -174,14 +193,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray'
   },
   btnText: {
-    fontSize: 13,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: '500',
   },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 10
+  },
+  inputSubContainer: {
+    flex: 1,
+    marginVertical: 10
+  },
+  textCount:{
+    marginLeft: 15,
+    fontSize: 12,
+    fontWeight: '300'
   }
 })
 
