@@ -4,11 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Avatar } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
+import Loader from '../components/Loader';
 
 const AddNote = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
 
   const handleSelectImages = async () => {
@@ -28,7 +30,6 @@ const AddNote = ({ navigation }) => {
       } else if (result.errorMessage) {
         console.log(result.errorMessage);
       } else if (result.assets) {
-        // console.log(result.assets);
         if (result.assets.length > 5) {
           return Alert.alert('Maximum selection limit is 5');
         } else {
@@ -44,7 +45,11 @@ const AddNote = ({ navigation }) => {
   }
 
   const handleSave = () => {
-    console.log("saved");
+    setLoading(true);
+    setTimeout(() => {
+      console.log("saved");
+      setLoading(false);
+    }, 1500)
   }
 
   const handleCancel = () => {
@@ -56,6 +61,7 @@ const AddNote = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+      <Loader visible={loading} loaderTitle={'Saving.....'} />
       <ScrollView>
         <View style={styles.noteInputContainer}>
           <Text style={styles.addNoteText}>Add Note</Text>
@@ -97,7 +103,7 @@ const AddNote = ({ navigation }) => {
           }
         </View>
         {selectedImages.length > 0 ?
-          <TouchableOpacity style={[styles.button, { width: 130, alignSelf: 'center' }]} onPress={()=> setSelectedImages([])}>
+          <TouchableOpacity style={[styles.button, { width: 130, alignSelf: 'center' }]} onPress={() => setSelectedImages([])}>
             <Text style={[styles.btnText, { alignSelf: 'center' }]} >Clear Images</Text>
           </TouchableOpacity>
           : <></>
@@ -108,10 +114,10 @@ const AddNote = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  mainContainer: { 
-    flex: 1, 
-    height: '100%', 
-    backgroundColor: 'lightgray' 
+  mainContainer: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: 'lightgray'
   },
   addNoteText: {
     fontSize: 28,
