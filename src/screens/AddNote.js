@@ -1,33 +1,61 @@
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Avatar } from 'react-native-paper';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const AddNote = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
+
+  const handleSelectImages = async () => {
+
+    const options = {
+      mediaType: 'photo',
+      selectionLimit: 5,
+      includeBase64: false,
+    }
+
+    try {
+      const result = await launchImageLibrary(options);
+      if (result.didCancel) {
+        console.log('Cancelled');
+      } else if (result.errorCode) {
+        console.log(result.errorCode);
+      } else if (result.errorMessage) {
+        console.log(result.errorMessage);
+      } else if (result.assets) {
+        // console.log(result.assets);
+        if (result.assets.length > 5) {
+          return Alert.alert('Maximum selection limit is 5');
+        } else {
+          setSelectedImages(result.assets);
+        }
+        setSelectedImages(result.assets);
+      } else {
+        console.log('No assets');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleSave = () => {
     console.log("saved");
   }
 
-
   const handleCancel = () => {
-    clear();
+    setSelectedImages([]);
+    setTitle('');
+    setDescription('');
     navigation.navigate('Home');
   }
 
-  const clear = () => {
-    setSelectedFiles([]);
-    setTitle('');
-    setDescription('');
-  }
-
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       <ScrollView>
         <View style={styles.noteInputContainer}>
           <Text style={styles.addNoteText}>Add Note</Text>
@@ -58,25 +86,33 @@ const AddNote = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.imgInputButton}>
+        <TouchableOpacity style={styles.imgInputButton} onPress={handleSelectImages}>
           <Icon name='image-multiple' size={40} />
         </TouchableOpacity>
         <View style={styles.imgPreview}>
-          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Avatar.Image style={styles.image} size={60} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
+          {selectedImages &&
+            selectedImages?.map(({ uri }, index) => {
+              return <Avatar.Image style={styles.image} size={60} source={{ uri: uri }} key={index} />
+            })
+          }
         </View>
-        <TouchableOpacity style={[styles.button, {width: 130, alignSelf: 'center'}]} onPress={clear}>
-          <Text style={[styles.btnText, {alignSelf: 'center'}]} >Clear Images</Text>
-        </TouchableOpacity>
+        {selectedImages.length > 0 ?
+          <TouchableOpacity style={[styles.button, { width: 130, alignSelf: 'center' }]} onPress={()=> setSelectedImages([])}>
+            <Text style={[styles.btnText, { alignSelf: 'center' }]} >Clear Images</Text>
+          </TouchableOpacity>
+          : <></>
+        }
       </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  mainContainer: { 
+    flex: 1, 
+    height: '100%', 
+    backgroundColor: 'lightgray' 
+  },
   addNoteText: {
     fontSize: 28,
     fontWeight: 'bold',
