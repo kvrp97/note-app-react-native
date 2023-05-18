@@ -14,6 +14,7 @@ const AddNote = ({ navigation }) => {
 
   const titleCharacterLimit = 100;
   const descriptionCharacterLimit = 450;
+  const imagesCount = 5;
 
 
   const handleSelectImages = async () => {
@@ -33,18 +34,23 @@ const AddNote = ({ navigation }) => {
       } else if (result.errorMessage) {
         console.log(result.errorMessage);
       } else if (result.assets) {
-        if (result.assets.length > 5) {
+        if ((result.assets.length + selectedImages.length) > imagesCount) {
           return Alert.alert('Maximum selection limit is 5');
         } else {
-          setSelectedImages(result.assets);
+          setSelectedImages((pre) => pre.concat(result.assets));
         }
-        setSelectedImages(result.assets);
       } else {
         console.log('No assets');
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const handleRemoveImage = (index) => {
+    let newSelectedImages = [...selectedImages];
+    newSelectedImages.splice(index, 1);
+    setSelectedImages(newSelectedImages);
   }
 
   const handleSave = () => {
@@ -66,7 +72,6 @@ const AddNote = ({ navigation }) => {
         name: selectedImages[i].fileName
       })
     }
-
 
 
   }
@@ -99,7 +104,7 @@ const AddNote = ({ navigation }) => {
               autoCapitalize='none'
               multiline
             />
-            <Text style={styles.textCount}>{titleCharacterLimit-title.length} / {titleCharacterLimit}</Text>
+            <Text style={styles.textCount}>{titleCharacterLimit - title.length} / {titleCharacterLimit}</Text>
           </View>
           <View style={styles.inputSubContainer}>
             <TextInput
@@ -116,7 +121,7 @@ const AddNote = ({ navigation }) => {
               autoCapitalize='none'
               multiline
             />
-            <Text style={styles.textCount}>{descriptionCharacterLimit-description.length} / {descriptionCharacterLimit}</Text>
+            <Text style={styles.textCount}>{descriptionCharacterLimit - description.length} / {descriptionCharacterLimit}</Text>
           </View>
         </View>
 
@@ -132,10 +137,16 @@ const AddNote = ({ navigation }) => {
         <TouchableOpacity style={styles.imgInputButton} onPress={handleSelectImages}>
           <Icon name='image-multiple' size={40} />
         </TouchableOpacity>
-        <View style={styles.imgPreview}>
+        <View style={styles.imagePreviewContainer}>
           {selectedImages &&
             selectedImages?.map(({ uri }, index) => {
-              return <Avatar.Image style={styles.image} size={60} source={{ uri: uri }} key={index} />
+              return (
+                <View style={styles.previewImage} key={index}>
+                  <Avatar.Image size={60} source={{ uri: uri }} key={index} />
+                  <TouchableOpacity style={styles.imageDeleteButton} onPress={()=> handleRemoveImage(index)}>
+                    <Icon name="delete" size={20} color="black" />
+                  </TouchableOpacity>
+                </View>)
             })
           }
         </View>
@@ -168,21 +179,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    paddingHorizontal: 15,       
+    paddingHorizontal: 15,
   },
   imgInputButton: {
     marginLeft: 35,
     marginVertical: 20,
-  },
-  imgPreview: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    margin: 2
   },
   button: {
     paddingHorizontal: 20,
@@ -206,10 +207,24 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 10
   },
-  textCount:{
+  textCount: {
     marginLeft: 15,
     fontSize: 12,
     fontWeight: '300'
+  },
+  previewImage: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginHorizontal: 3
+  },
+  imagePreviewContainer: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  imageDeleteButton:{
+    marginTop: 5
   }
 })
 
