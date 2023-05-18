@@ -16,7 +16,7 @@ const NoteItem = (props) => {
     }, [noteImages])
 
     return (
-        <TouchableOpacity id={noteId} style={styles.noteContainer} onPress={() => navigation.navigate('ViewNote', greeting)}>
+        <TouchableOpacity id={noteId} style={styles.noteContainer} onPress={() => navigation.navigate('ViewNote', {greeting})}>
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
             </View>

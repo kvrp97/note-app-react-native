@@ -3,7 +3,8 @@ import React from 'react'
 import { FAB } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-const AddButton = () => {
+const AddButton = (props) => {
+    
     const navigation = useNavigation();
 
     return (

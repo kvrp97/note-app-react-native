@@ -11,6 +11,7 @@ const NoteList = (props) => {
     useEffect(() => {
         getAllNotes();
     }, [])
+ 
 
     const getAllNotes = async () => {
         loading(true);

@@ -5,8 +5,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Avatar } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Loader from '../components/Loader';
+import axios from 'axios'
 
-const AddNote = ({ navigation }) => {
+const AddNote = (props) => {
+  const { navigation } = props;
+  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
@@ -16,9 +19,7 @@ const AddNote = ({ navigation }) => {
   const descriptionCharacterLimit = 450;
   const imagesCount = 5;
 
-
   const handleSelectImages = async () => {
-
     const options = {
       mediaType: 'photo',
       selectionLimit: 5,
@@ -53,8 +54,7 @@ const AddNote = ({ navigation }) => {
     setSelectedImages(newSelectedImages);
   }
 
-  const handleSave = () => {
-    // setLoading(true);
+  const handleSave = async () => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
@@ -73,10 +73,34 @@ const AddNote = ({ navigation }) => {
       })
     }
 
-
+    if (title.trim().length > 0 || description.trim().length > 0) {
+      setLoading(true);
+      await axios({
+        method: "post",
+        url: "api/v1/note/save",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then(function (response) {
+          //handle success
+          console.log(response.data);
+          setLoading(false);
+          onClose();
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response);
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+    } else {
+      setLoading(false);
+      Alert.alert('Please add a title or description');
+    }
   }
 
-  const handleCancel = () => {
+  const onClose = () => {
     setSelectedImages([]);
     setTitle('');
     setDescription('');
@@ -126,7 +150,7 @@ const AddNote = ({ navigation }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleCancel}>
+          <TouchableOpacity style={styles.button} onPress={onClose}>
             <Text style={styles.btnText} >Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={handleSave}>
@@ -143,7 +167,7 @@ const AddNote = ({ navigation }) => {
               return (
                 <View style={styles.previewImage} key={index}>
                   <Avatar.Image size={60} source={{ uri: uri }} key={index} />
-                  <TouchableOpacity style={styles.imageDeleteButton} onPress={()=> handleRemoveImage(index)}>
+                  <TouchableOpacity style={styles.imageDeleteButton} onPress={() => handleRemoveImage(index)}>
                     <Icon name="delete" size={20} color="black" />
                   </TouchableOpacity>
                 </View>)
@@ -223,7 +247,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  imageDeleteButton:{
+  imageDeleteButton: {
     marginTop: 5
   }
 })
