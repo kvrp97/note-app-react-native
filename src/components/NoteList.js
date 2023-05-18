@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import NoteItem from './NoteItem';
 
-const NoteList = () => {
+const NoteList = (props) => {
+
+    const { loading } = props
 
     const [NoteList, setNoteList] = useState([{}]);
 
@@ -11,6 +13,7 @@ const NoteList = () => {
     }, [])
 
     const getAllNotes = async () => {
+        loading(true);
         await axios.get('api/v1/note/get-all-notes')
             .then(response => {
                 setNoteList(response.data.data);
@@ -19,7 +22,7 @@ const NoteList = () => {
                 console.error(err);
             })
             .finally(() => {
-                setLoading(false);
+                loading(false);
             });
     }
 

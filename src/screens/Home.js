@@ -4,13 +4,16 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
 import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
+import Loader from '../components/Loader';
 
 const Home = ({ navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+      <Loader visible={loading} loaderTitle={'Loading Notes...'}/>
       <View style={styles.headerContainer}>
         <View style={styles.exitIconUserContainer}>
           <Text style={styles.userName}>Hi Ravindu....</Text>
@@ -28,7 +31,7 @@ const Home = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.noteListContainer}>
-        <NoteList/>
+        <NoteList loading={setLoading}/>
       </ScrollView>
       <AddButton />
     </SafeAreaView>
