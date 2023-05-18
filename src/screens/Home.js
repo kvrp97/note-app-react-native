@@ -6,7 +6,7 @@ import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
 import Loader from '../components/Loader';
 
-const Home = ({ navigation }) => {
+const Home = ({ refresh, setRefresh }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ const Home = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.noteListContainer}>
-        <NoteList loading={setLoading}/>
+        <NoteList refresh={refresh} setRefresh={setRefresh} loading={setLoading}/>
       </ScrollView>
       <AddButton />
     </SafeAreaView>

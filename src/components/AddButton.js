@@ -4,15 +4,20 @@ import { FAB } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 const AddButton = (props) => {
-    
+
     const navigation = useNavigation();
+
+    const handleGoToAddNote = ()=>{        
+        navigation.navigate('AddNote');
+    }
 
     return (
         <View>
             <FAB
                 icon="plus"
                 style={styles.fab}
-                onPress={() => navigation.navigate('AddNote')}
+                
+                onPress={handleGoToAddNote}
                 variant="primary"
             />
         </View>

@@ -7,8 +7,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Loader from '../components/Loader';
 import axios from 'axios'
 
-const AddNote = (props) => {
-  const { navigation } = props;
+const AddNote = ({ navigation, setRefresh }) => {  
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -84,6 +83,7 @@ const AddNote = (props) => {
         .then(function (response) {
           //handle success
           console.log(response.data);
+          setRefresh(true);
           setLoading(false);
           onClose();
         })
@@ -104,7 +104,7 @@ const AddNote = (props) => {
     setSelectedImages([]);
     setTitle('');
     setDescription('');
-    navigation.navigate('Home');
+    navigation.goBack();
   }
 
   return (
