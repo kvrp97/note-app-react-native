@@ -45,11 +45,27 @@ const AddNote = ({ navigation }) => {
   }
 
   const handleSave = () => {
-    setLoading(true);
-    setTimeout(() => {
-      console.log("saved");
-      setLoading(false);
-    }, 1500)
+    // setLoading(true);
+    const formData = new FormData();
+    formData.append('title',title);
+    formData.append('description',description);
+
+    const date = new Date();
+    const newNoteDateTime = date.toLocaleString('en-US', {
+      hour12: false,
+    });    
+    formData.append("dateTime", newNoteDateTime);
+
+    for (let i = 0; i < selectedImages.length; i++) {      
+      formData.append('images',{
+        uri: selectedImages[i].uri,
+        type: selectedImages[i].type,
+        name: selectedImages[i].fileName
+      })
+    }
+
+
+
   }
 
   const handleCancel = () => {
