@@ -3,20 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-const greeting = 'Hello'
-
 const NoteItem = (props) => {
     const navigation = useNavigation();
     const { noteId, title, description, dateTime, noteImages } = props;
 
-    const [imagesData, setImagesData] = useState([]);
-
-    useEffect(() => {
-        setImagesData(noteImages);
-    }, [noteImages])
-
     return (
-        <TouchableOpacity id={noteId} style={styles.noteContainer} onPress={() => navigation.navigate('ViewNote', {greeting})}>
+        <TouchableOpacity id={noteId} style={styles.noteContainer} onPress={() => navigation.navigate('ViewNote', { ...props })}>
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
             </View>
@@ -25,7 +17,7 @@ const NoteItem = (props) => {
             </View>
             <View style={styles.imagesContainer}>
                 {
-                    imagesData?.map(({ noteImageId, imagePath }) => {
+                    noteImages?.map(({ noteImageId, imagePath }) => {
                         return <Avatar.Image style={styles.image} size={30} source={{ uri: imagePath }} key={noteImageId} />
                     })
                 }
