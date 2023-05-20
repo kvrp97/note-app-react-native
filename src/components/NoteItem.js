@@ -28,8 +28,8 @@ const NoteItem = (props) => {
 
     const handleDeleteIconPress = () => {
         return Alert.alert(
-            "Delete Image..!",
-            "Are you sure you want to remove this note ?",
+            "Delete Note..!",
+            "Are you sure ?",
             [
                 {
                     text: "Yes",
@@ -44,6 +44,32 @@ const NoteItem = (props) => {
         );
     }
 
+    const handleLongPressOnNote = () => {
+        return Alert.alert(
+            "Choose what to do...",
+            "Remove or view & edit ?",
+            [
+                {
+                    text: "Delete",
+                    onPress: () => {
+                        handleDeleteNote();
+                    },
+                },
+                {
+                    text: "View & Edit",
+                    onPress: () => {
+                        navigation.navigate('ViewNote', {
+                            noteId, title, description, dateTime, noteImages
+                        })
+                    },
+                },
+                {
+                    text: "Cancel",
+                },
+            ]
+        );
+    }
+
     return (
         <>
             <Loader visible={loading} loaderTitle={'Deleting...'}/>
@@ -53,7 +79,7 @@ const NoteItem = (props) => {
                 onPress={() => navigation.navigate('ViewNote', {
                     noteId, title, description, dateTime, noteImages
                 })}
-
+                onLongPress={handleLongPressOnNote}
             >
                 <View style={styles.titleContainer}>
                     <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
