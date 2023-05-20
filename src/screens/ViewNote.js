@@ -3,26 +3,28 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../components/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
 
 const ViewNote = (props) => {
-  const { navigation, route } = props;
+  const { navigation, route, setRefresh } = props;
   const { noteId, title, description, dateTime, noteImages } = route.params;
 
-  const [noteTitle, setNoteTitle] = useState(title);
-  const [noteDescription, setNoteDescription] = useState(description);
-  const [previousImages, setPreviousImages] = useState(noteImages);
+  const [noteTitle, setNoteTitle] = useState('');
+  const [noteDescription, setNoteDescription] = useState('');
+  const [previousImages, setPreviousImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [ImagesToRemove, setImagesToRemove] = useState([]);
+  const [imagesToRemove, setImagesToRemove] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const titleCharacterLimit = 100;
   const descriptionCharacterLimit = 450;
   const imagesCount = 5;
 
-  useEffect(() => {
-    setNoteTitle(noteTitle);
-    setNoteDescription(noteDescription);
-  }, [noteTitle, noteDescription])
+  useEffect(()=>{
+    setNoteTitle(title);
+    setNoteDescription(description);
+    setPreviousImages(noteImages);
+  },[])
 
   const handleSelectImages = async () => {
     const options = {
@@ -40,7 +42,7 @@ const ViewNote = (props) => {
       } else if (result.errorMessage) {
         console.log(result.errorMessage);
       } else if (result.assets) {
-        if ((result.assets.length + noteImages.length) > imagesCount) {
+        if ((result.assets.length + previousImages.length) > imagesCount) {
           return Alert.alert('Maximum selection limit is 5');
         } else {
           setSelectedImages((pre) => pre.concat(result.assets));
@@ -57,13 +59,196 @@ const ViewNote = (props) => {
     let newPreviousImages = [...previousImages];
     newPreviousImages.splice(index, 1);
     setPreviousImages(newPreviousImages);
-    setImagesToRemove([...ImagesToRemove, image]);
+    setImagesToRemove([...imagesToRemove, image]);
   }
 
   const handleRemoveSelectedImage = (index) => {
     let newSelectedImages = [...selectedImages];
     newSelectedImages.splice(index, 1);
     setSelectedImages(newSelectedImages);
+  }
+
+  const handleUpdate = async () => {
+    if ((noteTitle !== title || noteDescription !== description) && noteImages.length === previousImages.length && selectedImages.length === 0) {
+      if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
+        setLoading(true);
+        updateNoteTitleAndDescription()
+          .then((response) => {
+            console.log(response.data);
+            setRefresh(true);
+            setLoading(false);
+            navigation.navigate('Home');
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          })
+      } else {
+        Alert.alert('Please add a title or description');
+      }
+    } else if ((noteTitle !== title || noteDescription !== description) && noteImages.length !== previousImages.length && selectedImages.length === 0) {
+      if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
+        setLoading(true);
+        Promise.all([updateNoteTitleAndDescription(), updateNoteByRemovingImage()])
+          .then(response => {
+            console.log('All requests completed:', response.data);
+            setRefresh(true);
+            setLoading(false);
+            navigation.navigate('Home')
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          })
+      } else {
+        Alert.alert('Please add a title or description');
+      }
+    } else if ((noteTitle !== title || noteDescription !== description) && noteImages.length !== previousImages.length && selectedImages.length !== 0) {
+      if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
+        setLoading(true);
+        Promise.all([updateNoteTitleAndDescription(), updateNoteByRemovingImage(), updateNoteByAddingImage()])
+          .then(response => {
+            console.log('All requests completed:', response.data);
+            setRefresh(true);
+            setLoading(false);
+            navigation.navigate('Home')
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          })
+      } else {
+        Alert.alert('Please add a title or description');
+      }
+    } else if ((noteTitle !== title || noteDescription !== description) && noteImages.length === previousImages.length && selectedImages.length !== 0) {
+      if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
+        setLoading(true);
+        Promise.all([updateNoteTitleAndDescription(), updateNoteByAddingImage()])
+          .then(response => {
+            console.log('All requests completed:', response.data);
+            setRefresh(true);
+            setLoading(false);
+            navigation.navigate('Home')
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        Alert.alert('Please add a title or description');
+      }
+
+    } else if ((noteTitle === title && noteDescription === description) && noteImages.length !== previousImages.length && selectedImages.length === 0) {
+      setLoading(true);
+      updateNoteByRemovingImage()
+        .then((response) => {
+          console.log(response.data);
+          setRefresh(true);
+          setLoading(false);
+          navigation.navigate('Home')
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+
+    } else if ((noteTitle === title && noteDescription === description) && noteImages.length === previousImages.length && selectedImages.length !== 0) {
+      setLoading(true);
+      updateNoteByAddingImage()
+        .then((response) => {
+          console.log(response.data);
+          setRefresh(true);
+          setLoading(false);
+          navigation.navigate('Home')
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else if ((noteTitle === title && noteDescription === description) && noteImages.length !== previousImages.length && selectedImages.length !== 0) {
+      setLoading(true);
+      Promise.all([updateNoteByRemovingImage(), updateNoteByAddingImage()])
+        .then(response => {
+          console.log('All requests completed:', response.data);
+          setRefresh(true);
+          setLoading(false);
+          navigation.navigate('Home')
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+    } else {
+      return
+    }
+  }
+
+  const updateNoteTitleAndDescription = () => {
+    const date = new Date();
+    const updatedDateTime = date.toLocaleString('en-US', {
+      hour12: false,
+    });
+
+    const data = {
+      noteId: noteId,
+      title: noteTitle,
+      description: noteDescription,
+      dateTime: updatedDateTime,
+    }
+    return axios.put('api/v1/note/update-title-description', data);
+  }
+
+  const updateNoteByRemovingImage = () => {
+    const date = new Date();
+    const newNoteDateTime = date.toLocaleString('en-US', {
+      hour12: false,
+    });
+    const data = {
+      noteId: noteId,
+      dateTime: newNoteDateTime,
+      noteImageList: imagesToRemove
+    }
+    return axios.put('api/v1/note/update-by-removing-image', data);
+  }
+
+  const updateNoteByAddingImage = () => {
+    const formData = new FormData();
+    formData.append("noteId", noteId);
+
+    const date = new Date();
+    const newNoteDateTime = date.toLocaleString('en-US', {
+      hour12: false,
+    });
+    formData.append("dateTime", newNoteDateTime);
+
+    for (let i = 0; i < selectedImages.length; i++) {
+      formData.append('images', {
+        uri: selectedImages[i].uri,
+        type: selectedImages[i].type,
+        name: selectedImages[i].fileName
+      })
+    }
+    
+    return axios({
+      method: "put",
+      url: 'api/v1/note/update-by-adding-image',
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },      
+    })
   }
 
   return (
@@ -75,7 +260,7 @@ const ViewNote = (props) => {
             <Icon name={'home'} size={40} />
           </TouchableOpacity>
           <Text style={styles.screenTitle}>NOTE</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleUpdate}>
             <Icon name={'check-circle'} size={35} />
             <Text>Done</Text>
           </TouchableOpacity>

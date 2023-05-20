@@ -23,7 +23,9 @@ const App = () => {
           <Stack.Screen name="Home">
             {(props) => <Home {...props} refresh={refresh} setRefresh={setRefresh} />}
           </Stack.Screen>
-          <Stack.Screen name="ViewNote" component={ViewNote} />
+          <Stack.Screen name="ViewNote">
+            {(props) => <ViewNote {...props} setRefresh={setRefresh} />}
+          </Stack.Screen>
           <Stack.Screen name="AddNote">
             {(props) => <AddNote {...props} setRefresh={setRefresh} />}
           </Stack.Screen>
