@@ -22,6 +22,7 @@ const NoteItem = (props) => {
                     })
                 }
             </View>
+            <Text style={styles.dateTimeText}>{dateTime}</Text>
         </TouchableOpacity>
     )
 }
@@ -59,6 +60,11 @@ const styles = StyleSheet.create({
     },
     descriptionContainer: {
         marginVertical: 5
+    },
+    dateTimeText:{
+        marginTop: 5,
+        fontSize: 11,
+        fontWeight: '500'
     }
 })
 
