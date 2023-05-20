@@ -6,7 +6,7 @@ const NoteList = (props) => {
 
     const { loading, refresh, setRefresh } = props
 
-    const [NoteList, setNoteList] = useState([{}]);
+    const [NoteList, setNoteList] = useState([]);
 
     useEffect(() => {
         getAllNotes();
