@@ -13,7 +13,7 @@ const Home = ({ refresh, setRefresh }) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <Loader visible={loading} loaderTitle={'Loading Notes...'}/>
+      <Loader visible={loading} loaderTitle={'Loading...'}/>
       <View style={styles.headerContainer}>
         <View style={styles.exitIconUserContainer}>
           <Text style={styles.userName}>Hi Ravindu....</Text>
@@ -31,7 +31,7 @@ const Home = ({ refresh, setRefresh }) => {
         />
       </View>
       <ScrollView style={styles.noteListContainer}>
-        <NoteList refresh={refresh} setRefresh={setRefresh} loading={setLoading}/>
+        <NoteList refresh={refresh} setRefresh={setRefresh} setLoading={setLoading}/>
       </ScrollView>
       <AddButton />
     </SafeAreaView>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   noteListContainer: {
     display: 'flex',
     flex: 1,
-    padding: 5,
-    marginBottom: 25
+    height: '100%',
+    marginHorizontal: 5,
   }
 })

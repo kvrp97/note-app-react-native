@@ -1,29 +1,81 @@
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
+import Loader from './Loader';
 
 const NoteItem = (props) => {
     const navigation = useNavigation();
-    const { noteId, title, description, dateTime, noteImages } = props;
+    const { noteId, title, description, dateTime, noteImages, setRefresh } = props;
+
+    const [loading, setLoading] = useState(false);
+
+
+    const handleDeleteNote = () => {
+        setLoading(true);
+        axios.delete(`api/v1/note/delete-note/${noteId}`)
+            .then((response) => {
+                console.log(response.data);
+                setLoading(false);
+                setRefresh(true);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    const handleDeleteIconPress = () => {
+        return Alert.alert(
+            "Delete Image..!",
+            "Are you sure you want to remove this note ?",
+            [
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        handleDeleteNote();
+                    },
+                },
+                {
+                    text: "No",
+                },
+            ]
+        );
+    }
 
     return (
-        <TouchableOpacity id={noteId} style={styles.noteContainer} onPress={() => navigation.navigate('ViewNote', { ...props })}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
-            </View>
-            <View style={styles.descriptionContainer}>
-                <Text style={styles.descriptionText} numberOfLines={3}>{description}</Text>
-            </View>
-            <View style={styles.imagesContainer}>
-                {
-                    noteImages?.map(({ noteImageId, imagePath }) => {
-                        return <Avatar.Image style={styles.image} size={30} source={{ uri: imagePath }} key={noteImageId} />
-                    })
-                }
-            </View>
-            <Text style={styles.dateTimeText}>{dateTime}</Text>
-        </TouchableOpacity>
+        <>
+            <Loader visible={loading} loaderTitle={'Deleting...'}/>
+            <TouchableOpacity
+                id={noteId}
+                style={styles.noteContainer}
+                onPress={() => navigation.navigate('ViewNote', {
+                    noteId, title, description, dateTime, noteImages
+                })}
+
+            >
+                <View style={styles.titleContainer}>
+                    <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
+                </View>
+                <View style={styles.descriptionContainer}>
+                    <Text style={styles.descriptionText} numberOfLines={3}>{description}</Text>
+                </View>
+                <View style={styles.imagesContainer}>
+                    {
+                        noteImages?.map(({ noteImageId, imagePath }) => {
+                            return <Avatar.Image style={styles.image} size={35} source={{ uri: imagePath }} key={noteImageId} />
+                        })
+                    }
+                </View>
+                <View style={styles.noteFooter}>
+                    <Text style={styles.dateTimeText}>{dateTime}</Text>
+                    <TouchableOpacity onPress={handleDeleteIconPress}>
+                        <Icon name="delete-circle" size={25} />
+                    </TouchableOpacity>
+                </View>
+            </TouchableOpacity>
+        </>
     )
 }
 const styles = StyleSheet.create({
@@ -61,10 +113,15 @@ const styles = StyleSheet.create({
     descriptionContainer: {
         marginVertical: 5
     },
-    dateTimeText:{
+    dateTimeText: {
         marginTop: 5,
         fontSize: 11,
         fontWeight: '500'
+    },
+    noteFooter: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 })
 
