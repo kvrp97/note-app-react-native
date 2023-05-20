@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Loader from '../components/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Avatar } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 const ViewNote = (props) => {
@@ -120,27 +119,82 @@ const ViewNote = (props) => {
         <TouchableOpacity style={styles.imgInputButton} onPress={handleSelectImages}>
           <Icon name='image-multiple' size={40} />
         </TouchableOpacity>
-        <View style={styles.imagePreviewContainer}>
-          {previousImages &&
+
+        <View style={styles.imageContainer}>
+          {
             previousImages?.map((image, index) => {
               return (
-                <View style={styles.previewImage} key={index}>
-                  <Avatar.Image size={60} source={{ uri: image.imagePath }} key={index} />
-                  <TouchableOpacity style={styles.imageDeleteButton} onPress={() => handleRemovePreviousImage(image, index)}>
-                    <Icon name="delete" size={20} color="black" />
+                <View key={index}>
+                  <TouchableOpacity
+                    style={styles.imageUnit}
+                    onLongPress={() => {
+                      return Alert.alert(
+                        "Delete Image..!",
+                        "Are you sure you want to remove this image ?",
+                        [
+                          // The "Yes" button
+                          {
+                            text: "Yes",
+                            onPress: () => {
+                              handleRemovePreviousImage(image, index);
+                            },
+                          },
+                          // The "No" button
+                          // Does nothing but dismiss the dialog when tapped
+                          {
+                            text: "No",
+                          },
+                        ]
+                      );
+                    }}
+
+                  >
+                    <Image
+                      style={styles.imageItem}
+                      source={{
+                        uri: image.imagePath,
+                      }}
+                    />
                   </TouchableOpacity>
-                </View>)
+                </View>
+              )
             })
           }
-          {selectedImages &&
+          {
             selectedImages?.map(({ uri }, index) => {
               return (
-                <View style={styles.previewImage} key={index}>
-                  <Avatar.Image size={60} source={{ uri: uri }} key={index} />
-                  <TouchableOpacity style={styles.imageDeleteButton} onPress={() => handleRemoveSelectedImage(index)}>
-                    <Icon name="delete" size={20} color="black" />
+                <View key={index}>
+                  {/* <Avatar.Image size={60} source={{ uri: uri }} key={index} /> */}
+                  <TouchableOpacity
+                    style={styles.imageUnit}
+                    onLongPress={() => {
+                      return Alert.alert(
+                        "Delete Image..!",
+                        "Are you sure you want to remove this image ?",
+                        [
+                          // The "Yes" button
+                          {
+                            text: "Yes",
+                            onPress: () => {
+                              handleRemoveSelectedImage(index);
+                            },
+                          },
+                          // The "No" button
+                          // Does nothing but dismiss the dialog when tapped
+                          {
+                            text: "No",
+                          },
+                        ]
+                      );
+                    }}
+                  >
+                    <Image
+                      style={styles.imageItem}
+                      source={{ uri: uri }}
+                    />
                   </TouchableOpacity>
-                </View>)
+                </View>
+              )
             })
           }
         </View>
@@ -187,19 +241,25 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginVertical: 2,
   },
-  imagePreviewContainer: {
-    flexDirection: 'row',
-    marginVertical: 10,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  previewImage: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginHorizontal: 3
-  },
   imageDeleteButton: {
-    marginTop: 5
+    padding: 5
+  },
+  imageContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: 5,
+    marginTop: 10,
+    marginBottom: 50
+  },
+  imageItem: {
+    width: 120,
+    height: 120,
+  },
+  imageUnit: {
+    alignItems: 'center',
   }
 })
 
