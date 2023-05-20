@@ -28,13 +28,13 @@ const NoteItem = (props) => {
 }
 const styles = StyleSheet.create({
     noteContainer: {
-        marginVertical: 5,
+        marginVertical: 2,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        backgroundColor: 'lightyellow',
+        backgroundColor: '#faf8e8',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: 'orange',
+        borderColor: 'lightgray',
         borderRadius: 10
     },
     imagesContainer: {
