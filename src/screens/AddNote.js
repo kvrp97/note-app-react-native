@@ -123,6 +123,7 @@ const AddNote = ({ navigation, setRefresh }) => {
               }}
               value={title}
               placeholder="Title"
+              placeholderTextColor="#4f4f4d"
               keyboardType="default"
               autoCorrect={false}
               autoCapitalize='none'
@@ -140,6 +141,7 @@ const AddNote = ({ navigation, setRefresh }) => {
               }}
               value={description}
               placeholder="Description"
+              placeholderTextColor="#4f4f4d"
               keyboardType="default"
               autoCorrect={false}
               autoCapitalize='none'
@@ -159,7 +161,7 @@ const AddNote = ({ navigation, setRefresh }) => {
         </View>
 
         <TouchableOpacity style={styles.imgInputButton} onPress={handleSelectImages}>
-          <Icon name='image-multiple' size={40} />
+          <Icon name='image-multiple' size={40} color='black'/>
         </TouchableOpacity>
         <View style={styles.imagePreviewContainer}>
           {selectedImages &&
@@ -192,6 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafaf0'
   },
   addNoteText: {
+    color: 'black',
     fontSize: 28,
     fontWeight: 'bold',
     marginVertical: 20,
@@ -203,11 +206,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
+    color: 'black',
     paddingHorizontal: 15,
   },
-  imgInputButton: {
+  imgInputButton: {    
     marginLeft: 35,
     marginVertical: 20,
+    marginRight:325,
+    padding: 5
   },
   button: {
     paddingHorizontal: 20,
@@ -219,6 +225,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 14,
+    color: 'black',
     fontWeight: '500',
   },
   buttonContainer: {
