@@ -447,8 +447,8 @@ const styles = StyleSheet.create({
     marginBottom: 50
   },
   imageItem: {
-    width: 120,
-    height: 120,
+    width: 150,
+    height: 150,
   },
   imageUnit: {
     alignItems: 'center',
