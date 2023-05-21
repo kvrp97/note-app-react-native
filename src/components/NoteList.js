@@ -4,37 +4,59 @@ import NoteItem from './NoteItem';
 
 const NoteList = (props) => {
 
-    const { setLoading, refresh, setRefresh } = props
+    const { setLoading, refresh, setRefresh, searchQuery } = props
 
-    const [NoteList, setNoteList] = useState([]);
-
-    useEffect(() => {
-        getAllNotes();
-    }, []) 
+    const [noteList, setNoteList] = useState([]);
 
     useEffect(() => {
         getAllNotes();
-    }, [refresh]) 
+    }, [])
+
+    useEffect(() => {
+        getAllNotes();
+    }, [refresh])
+
+    useEffect(() => {
+        if (searchQuery.length > 0) {
+            searchNotes();
+        } else {
+            getAllNotes();
+        }
+    }, [searchQuery])
+
+    const searchNotes = async () => {
+        await axios.get('api/v1/note/search', {
+            params: {
+                searchKeyword: searchQuery,
+            }
+        })
+            .then((response) => {
+                setNoteList(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     const getAllNotes = async () => {
         setLoading(true);
         await axios.get('api/v1/note/get-all-notes')
             .then(response => {
                 setNoteList(response.data.data);
-                setRefresh(false);
             })
             .catch(err => {
                 console.error(err);
             })
             .finally(() => {
+                setRefresh(false);
                 setLoading(false);
             });
     }
 
     return (
         <>
-            {NoteList &&
-                NoteList?.map((note, index) => {
+            {noteList &&
+                noteList?.map((note, index) => {
                     return <NoteItem
                         key={index}
                         noteId={note.noteId}
@@ -42,7 +64,7 @@ const NoteList = (props) => {
                         description={note.description}
                         dateTime={note.dateTime}
                         noteImages={note.noteImages}
-                        setRefresh={setRefresh}                                              
+                        setRefresh={setRefresh}
                     />
                 })
             }

@@ -31,7 +31,7 @@ const Home = ({ refresh, setRefresh }) => {
         />
       </View>
       <ScrollView style={styles.noteListContainer}>
-        <NoteList refresh={refresh} setRefresh={setRefresh} setLoading={setLoading}/>
+        <NoteList searchQuery={searchQuery} refresh={refresh} setRefresh={setRefresh} setLoading={setLoading}/>
       </ScrollView>
       <AddButton />
     </SafeAreaView>
