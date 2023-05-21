@@ -257,12 +257,12 @@ const ViewNote = (props) => {
       <ScrollView>
         <View style={styles.topBtnContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name={'home'} size={40} />
+            <Icon name={'home'} size={40} color='#4f4f4d'/>
           </TouchableOpacity>
           <Text style={styles.screenTitle}>NOTE</Text>
           <TouchableOpacity onPress={handleUpdate}>
-            <Icon name={'check-circle'} size={35} />
-            <Text>Done</Text>
+            <Icon name={'check-circle'} size={35} color='#4f4f4d'/>
+            <Text style={{ color: '#4f4f4d' }}>Done</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.textInputContainer}>
@@ -276,6 +276,7 @@ const ViewNote = (props) => {
               }}
               value={noteTitle}
               placeholder="Title"
+              placeholderTextColor="#4f4f4d"
               keyboardType="default"
               autoCorrect={false}
               autoCapitalize='none'
@@ -293,6 +294,7 @@ const ViewNote = (props) => {
               }}
               value={noteDescription}
               placeholder="Description"
+              placeholderTextColor="#4f4f4d"
               keyboardType="default"
               autoCorrect={false}
               autoCapitalize='none'
@@ -302,7 +304,7 @@ const ViewNote = (props) => {
           </View>
         </View>
         <TouchableOpacity style={styles.imgInputButton} onPress={handleSelectImages}>
-          <Icon name='image-multiple' size={40} />
+          <Icon name='image-multiple' size={40} color='#3d3d3b'/>
         </TouchableOpacity>
 
         <View style={styles.imageContainer}>
@@ -394,6 +396,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e4f1f7',
   },
   screenTitle: {
+    color: 'black',
     fontSize: 20,
     marginTop: 7,
     fontWeight: '600'
@@ -414,17 +417,21 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   textInput: {
+    color: 'black',
     width: '100%',
     paddingHorizontal: 15,
   },
   textCount: {
+    color: 'black',
     marginLeft: 15,
     fontSize: 12,
     fontWeight: '300'
   },
-  imgInputButton: {
+  imgInputButton: {    
+    padding: 5,
     marginLeft: 30,
-    marginVertical: 2,
+    marginRight: 330,
+    marginVertical: 15,    
   },
   imageDeleteButton: {
     padding: 5
