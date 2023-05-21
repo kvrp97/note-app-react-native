@@ -74,6 +74,7 @@ const SignIn = ({ navigation }) => {
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
         Alert.alert('Error', 'Invalid credentials');
       });
   }
