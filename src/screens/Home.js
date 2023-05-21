@@ -1,23 +1,59 @@
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
 import Loader from '../components/Loader';
 import NoteList from '../components/noteAppComponents/NoteList';
 import AddButton from '../components/noteAppComponents/AddButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = ({ refresh, setRefresh }) => {
+const Home = ({ refresh, setRefresh, navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState({});
+
+  useEffect(()=>{
+    getUserData();
+  },[])
+
+  const getUserData = async () => {
+    try {
+      const uData = await AsyncStorage.getItem('nUdata');
+      if (uData) {
+        setUserDetails(JSON.parse(uData));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleExit = () => {
+    return Alert.alert(
+      "Exit App..!",
+      "Are you sure you want to exit ?",
+      [
+        {
+          text: "Yes",
+          onPress: async () => {
+            await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userDetails, isLogged: false }));
+            navigation.navigate('SignIn');
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
+  }
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <Loader visible={loading} loaderTitle={'Loading...'}/>
+      <Loader visible={loading} loaderTitle={'Loading...'} />
       <View style={styles.headerContainer}>
         <View style={styles.exitIconUserContainer}>
-          <Text style={styles.userName}>Hi Ravindu....</Text>
-          <TouchableOpacity>
+          <Text style={styles.userName}>Hi {userDetails.userName}..</Text>
+          <TouchableOpacity onPress={handleExit}>
             <Icon name="sign-out-alt" size={20} color="white" />
           </TouchableOpacity>
         </View>
@@ -31,7 +67,7 @@ const Home = ({ refresh, setRefresh }) => {
         />
       </View>
       <ScrollView style={styles.noteListContainer}>
-        <NoteList searchQuery={searchQuery} refresh={refresh} setRefresh={setRefresh} setLoading={setLoading}/>
+        <NoteList searchQuery={searchQuery} refresh={refresh} setRefresh={setRefresh} setLoading={setLoading} />
       </ScrollView>
       <AddButton />
     </SafeAreaView>
