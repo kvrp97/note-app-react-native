@@ -84,13 +84,15 @@ const SignUp = ({ navigation }) => {
   }
 
   const saveUser = async () => {
-    axios.post('api/v1/user/save', {
+    setLoading(true);
+    await axios.post('api/v1/user/save', {
       firstName: inputs.firstName,
       lastName: inputs.lastName,
       emailAddress: inputs.email,
       password: inputs.confirmPassword,
     })
-      .then(() => {
+      .then((response) => {
+        console.log(response.data.message);
         setInputs({
           firstName: '',
           lastName: '',
@@ -98,11 +100,13 @@ const SignUp = ({ navigation }) => {
           password: '',
           confirmPassword: '',
         })
+        setLoading(false);
         navigation.navigate('SignIn');
       })
       .catch(error => {
+        setLoading(false);        
         if (error.response.data.statusCode === 409) {
-          Alert.prompt('This email is already in use');
+          Alert.alert('This email is already in use');
         } else {
           Alert.alert('Internal error');
         }

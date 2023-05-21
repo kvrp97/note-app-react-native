@@ -48,8 +48,7 @@ const SignIn = ({ navigation }) => {
     }
   }
 
-  const userSignIn = async () => {
-    console.log(inputs);
+  const userSignIn = async () => {   
     setLoading(true);
     await axios.post('api/v1/user/login',
       {
@@ -59,6 +58,7 @@ const SignIn = ({ navigation }) => {
     )
       .then(async (response) => {
         setLoading(false);
+        console.log(response.data.message);
         try {
           await AsyncStorage.setItem('nUdata', JSON.stringify(
             {
@@ -72,10 +72,9 @@ const SignIn = ({ navigation }) => {
           Alert.alert('Error', 'Something went wrong');
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((error) => {        
         setLoading(false);
-        Alert.alert('Error', 'Invalid credentials');
+        Alert.alert('Invalid credentials');
       });
   }
 
