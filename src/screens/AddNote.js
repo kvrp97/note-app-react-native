@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     marginVertical: 10
   },
   textCount: {
+    color: 'black',
     marginLeft: 15,
     fontSize: 12,
     fontWeight: '300'
