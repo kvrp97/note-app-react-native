@@ -1,12 +1,12 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Register = () => {
+const SignUp = () => {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Text style={styles.regText}>Register</Text>
-        <Text style={styles.subRegText}>Enter Your Details to Register</Text>
+        <Text style={styles.signUpText}>Sign Up</Text>
+        <Text style={styles.subSignUpText}>Enter Your Details to Sign Up</Text>
         <View style={{ marginVertical:20 }}>
           
         </View>
@@ -15,7 +15,7 @@ const Register = () => {
   )
 }
 
-export default Register
+export default SignUp
 
 const styles = StyleSheet.create({
   safeAreaContainer:{
@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
     paddingTop:50,
     paddingHorizontal:20,
   },
-  regText:{
+  signUpText:{
     color:'black',
     fontSize:40,
     fontWeight: 'bold',
   },
-  subRegText:{
+  subSignUpText:{
     color:'gray',
     fontSize:18,
     marginVertical:10

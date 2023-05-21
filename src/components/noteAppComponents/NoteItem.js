@@ -4,7 +4,8 @@ import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
-import Loader from './Loader';
+import Loader from '../Loader';
+
 
 const NoteItem = (props) => {
     const navigation = useNavigation();

@@ -2,9 +2,9 @@ import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity } fr
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
-import AddButton from '../components/AddButton';
-import NoteList from '../components/NoteList';
 import Loader from '../components/Loader';
+import NoteList from '../components/noteAppComponents/NoteList';
+import AddButton from '../components/noteAppComponents/AddButton';
 
 const Home = ({ refresh, setRefresh }) => {
 

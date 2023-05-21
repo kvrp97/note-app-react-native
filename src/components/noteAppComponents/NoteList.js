@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import NoteItem from './NoteItem';
 
+
 const NoteList = (props) => {
 
     const { setLoading, refresh, setRefresh, searchQuery } = props
