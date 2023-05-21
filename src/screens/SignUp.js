@@ -139,7 +139,7 @@ const SignUp = ({ navigation }) => {
           <InputText
             iconName={'email-outline'}
             label={'Email'}
-            placeholder={'Enter your email address'}
+            placeholder={'Enter a valid email address'}
             keyboardType={'email-address'}
             value={inputs.email}
             onChangeText={(text) => handleInputs(text, 'email')}
@@ -149,7 +149,7 @@ const SignUp = ({ navigation }) => {
           <InputText
             iconName={'lock-outline'}
             label={'Password'}
-            placeholder={'Enter your password'}
+            placeholder={'Enter a password'}
             password
             value={inputs.password}
             onChangeText={(text) => handleInputs(text, 'password')}
@@ -159,7 +159,7 @@ const SignUp = ({ navigation }) => {
           <InputText
             iconName={'pencil-lock-outline'}
             label={'Confirm Password'}
-            placeholder={'Re-type your password'}
+            placeholder={'Re-type the password'}
             secureTextEntry={true}
             keyboardType={'default'}
             value={inputs.confirmPassword}
