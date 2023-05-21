@@ -130,8 +130,7 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         color: 'black',
-        fontSize: 12,
-        textAlign: 'justify'
+        fontSize: 12,        
     },
     titleContainer: {
         marginVertical: 5
