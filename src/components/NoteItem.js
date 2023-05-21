@@ -97,7 +97,7 @@ const NoteItem = (props) => {
                 <View style={styles.noteFooter}>
                     <Text style={styles.dateTimeText}>{dateTime}</Text>
                     <TouchableOpacity onPress={handleDeleteIconPress}>
-                        <Icon name="delete-circle" size={25} />
+                        <Icon name="delete-circle" size={25} color='darkgray'/>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     dateTimeText: {
+        color: '#787877',
         marginTop: 5,
         fontSize: 11,
         fontWeight: '500'
@@ -147,7 +148,8 @@ const styles = StyleSheet.create({
     noteFooter: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginTop: 5
     }
 })
 
