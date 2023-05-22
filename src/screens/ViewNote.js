@@ -339,7 +339,7 @@ const ViewNote = (props) => {
                     <Image
                       style={styles.imageItem}
                       source={{
-                        uri: image.imagePath,
+                        uri: axios.defaults.baseURL + 'api/v1/note/image/' + image.imageName,
                       }}
                     />
                   </TouchableOpacity>

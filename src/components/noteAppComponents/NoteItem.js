@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import Loader from '../Loader';
 
 
@@ -90,8 +90,8 @@ const NoteItem = (props) => {
                 </View>
                 <View style={styles.imagesContainer}>
                     {
-                        noteImages?.map(({ noteImageId, imagePath }) => {
-                            return <Avatar.Image style={styles.image} size={35} source={{ uri: imagePath }} key={noteImageId} />
+                        noteImages?.map(({ noteImageId, imageName }) => {
+                            return <Avatar.Image style={styles.image} size={35} source={{ uri: axios.defaults.baseURL + 'api/v1/note/image/' + imageName }} key={noteImageId} />
                         })
                     }
                 </View>
