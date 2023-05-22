@@ -73,7 +73,7 @@ const SignUp = ({ navigation }) => {
     if (!inputs.confirmPassword) {
       handleErrorMessage('Re-type password', 'confirmPassword');
       valid = false;
-    } else if (!inputs.confirmPassword.match(inputs.password)) {
+    } else if (inputs.confirmPassword !== inputs.password) {
       handleErrorMessage('Password is not matched', 'confirmPassword');
       valid = false;
     }
@@ -89,7 +89,7 @@ const SignUp = ({ navigation }) => {
       firstName: inputs.firstName,
       lastName: inputs.lastName,
       emailAddress: inputs.email,
-      password: inputs.confirmPassword,
+      password: inputs.password,
     })
       .then((response) => {
         console.log(response.data.message);

@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
@@ -13,9 +13,34 @@ const Home = ({ refresh, setRefresh, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({});
 
-  useEffect(()=>{
+  useEffect(() => {
     getUserData();
-  },[])
+  }, [])
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to exit?',
+        [
+          {
+            text: 'YES',
+            onPress: () => BackHandler.exitApp()
+          },
+          {
+            text: 'No',
+            onPress: () => null,
+            style: 'cancel',
+          },
+        ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const getUserData = async () => {
     try {
@@ -30,8 +55,8 @@ const Home = ({ refresh, setRefresh, navigation }) => {
 
   const handleExit = () => {
     return Alert.alert(
-      "Exit App..!",
-      "Are you sure you want to exit ?",
+      "Sign Out!",
+      "Are you sure?",
       [
         {
           text: "Yes",
