@@ -58,6 +58,10 @@ const SignIn = ({ navigation }) => {
     )
       .then(async (response) => {
         setLoading(false);
+        setInputs({
+          email: '',
+          password: ''
+        });
         console.log(response.data.message);
         try {
           await AsyncStorage.setItem('nUdata', JSON.stringify(
