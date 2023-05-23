@@ -85,7 +85,7 @@ const ViewNote = (props) => {
     setSelectedImages(newSelectedImages);
   }
 
-  const handleUpdate = async () => {    
+  const handleUpdate = async () => {
     if ((noteTitle !== title || noteDescription !== description) && noteImages.length === previousImages.length && selectedImages.length === 0) {
       if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
         setLoading(true);
@@ -110,7 +110,7 @@ const ViewNote = (props) => {
         setLoading(true);
         Promise.all([updateNoteTitleAndDescription(), updateNoteByRemovingImage()])
           .then(response => {
-            console.log('All requests completed:', response.data);
+            console.log('All requests were completed');
             setRefresh(true);
             setLoading(false);
             navigation.navigate('Home')
@@ -129,7 +129,7 @@ const ViewNote = (props) => {
         setLoading(true);
         Promise.all([updateNoteTitleAndDescription(), updateNoteByRemovingImage(), updateNoteByAddingImage()])
           .then(response => {
-            console.log('All requests completed:', response.data);
+            console.log('All requests were completed');
             setRefresh(true);
             setLoading(false);
             navigation.navigate('Home')
@@ -148,7 +148,7 @@ const ViewNote = (props) => {
         setLoading(true);
         Promise.all([updateNoteTitleAndDescription(), updateNoteByAddingImage()])
           .then(response => {
-            console.log('All requests completed:', response.data);
+            console.log('All requests were completed');
             setRefresh(true);
             setLoading(false);
             navigation.navigate('Home')
@@ -198,7 +198,7 @@ const ViewNote = (props) => {
       setLoading(true);
       Promise.all([updateNoteByRemovingImage(), updateNoteByAddingImage()])
         .then(response => {
-          console.log('All requests completed:', response.data);
+          console.log('All requests were completed');
           setRefresh(true);
           setLoading(false);
           navigation.navigate('Home')
@@ -336,7 +336,7 @@ const ViewNote = (props) => {
                 <View key={index}>
                   <TouchableOpacity
                     style={styles.imageUnit}
-                    onPress={() => {
+                    onPress={() => {                      
                       setCurrentImageIndex(index)
                       setIsVisible(true)
                     }}
@@ -377,11 +377,10 @@ const ViewNote = (props) => {
             selectedImages?.map(({ uri }, index) => {
               return (
                 <View key={index}>
-                  {/* <Avatar.Image size={60} source={{ uri: uri }} key={index} /> */}
                   <TouchableOpacity
                     style={styles.imageUnit}
-                    onPress={() => {
-                      setCurrentImageIndex(index)
+                    onPress={() => {                      
+                      setCurrentImageIndex(previousImages.length + index)
                       setIsVisible(true)
                     }}
                     onLongPress={() => {
