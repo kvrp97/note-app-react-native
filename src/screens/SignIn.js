@@ -1,10 +1,11 @@
-import { Alert, Keyboard, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, BackHandler, Keyboard, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import InputText from '../components/userSignComponents/InputText';
 import Loader from '../components/Loader';
 import Button from '../components/userSignComponents/Button';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const SignIn = ({ navigation }) => {
   const [inputs, setInputs] = useState({
@@ -14,6 +15,19 @@ const SignIn = ({ navigation }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        BackHandler.exitApp();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => backHandler.remove();
+    }, [])
+  );
 
   const handleInputs = (text, input) => {
     setInputs((previousInput) => ({
