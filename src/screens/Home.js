@@ -1,11 +1,12 @@
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, BackHandler } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, BackHandler } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
 import Loader from '../components/Loader';
 import NoteList from '../components/noteAppComponents/NoteList';
 import AddButton from '../components/noteAppComponents/AddButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Home = ({ refresh, setRefresh, navigation }) => {
 
@@ -17,30 +18,28 @@ const Home = ({ refresh, setRefresh, navigation }) => {
     getUserData();
   }, [])
 
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert('Hold on!', 'Are you sure you want to exit?',
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert('Exit App?','Are you sure you want to exit?',
         [
           {
-            text: 'YES',
-            onPress: () => BackHandler.exitApp()
+            text: 'Yes',
+            onPress: () => BackHandler.exitApp(),
           },
           {
             text: 'No',
-            onPress: () => null,
             style: 'cancel',
-          },
+          }
         ]);
-      return true;
-    };
+        return true;
+      };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-    return () => backHandler.remove();
-  }, []);
+      return () => backHandler.remove();
+    }, [])
+  );
 
   const getUserData = async () => {
     try {
