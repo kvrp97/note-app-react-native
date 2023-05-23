@@ -4,6 +4,7 @@ import Loader from '../components/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
+import ImageView from "react-native-image-viewing";
 
 const ViewNote = (props) => {
   const { navigation, route, setRefresh } = props;
@@ -14,17 +15,33 @@ const ViewNote = (props) => {
   const [previousImages, setPreviousImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [imagesToRemove, setImagesToRemove] = useState([]);
+  const [imagesView, setImagesView] = useState([]);
+
   const [loading, setLoading] = useState(false);
+  const [visible, setIsVisible] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const titleCharacterLimit = 100;
   const descriptionCharacterLimit = 450;
   const imagesCount = 5;
 
-  useEffect(()=>{
+  useEffect(() => {
     setNoteTitle(title);
     setNoteDescription(description);
     setPreviousImages(noteImages);
-  },[])
+  }, [])
+
+  useEffect(() => {
+    const imageSet1 = previousImages.map(({ imageName }) => {
+      return { uri: axios.defaults.baseURL + 'api/v1/note/image/' + imageName }
+    })
+    setImagesView(imageSet1);
+
+    const imageSet2 = selectedImages.map(({ uri }) => {
+      return { uri: uri }
+    })
+    setImagesView((pre) => pre.concat(imageSet2));
+  }, [previousImages, selectedImages])
 
   const handleSelectImages = async () => {
     const options = {
@@ -68,7 +85,7 @@ const ViewNote = (props) => {
     setSelectedImages(newSelectedImages);
   }
 
-  const handleUpdate = async () => {
+  const handleUpdate = async () => {    
     if ((noteTitle !== title || noteDescription !== description) && noteImages.length === previousImages.length && selectedImages.length === 0) {
       if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
         setLoading(true);
@@ -242,12 +259,12 @@ const ViewNote = (props) => {
         name: selectedImages[i].fileName
       })
     }
-    
+
     return axios({
       method: "put",
       url: 'api/v1/note/update-by-adding-image',
       data: formData,
-      headers: { "Content-Type": "multipart/form-data" },      
+      headers: { "Content-Type": "multipart/form-data" },
     })
   }
 
@@ -257,11 +274,11 @@ const ViewNote = (props) => {
       <ScrollView>
         <View style={styles.topBtnContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name={'home'} size={40} color='#4f4f4d'/>
+            <Icon name={'home'} size={40} color='#4f4f4d' />
           </TouchableOpacity>
           <Text style={styles.screenTitle}>NOTE</Text>
           <TouchableOpacity onPress={handleUpdate}>
-            <Icon name={'check-circle'} size={35} color='#4f4f4d'/>
+            <Icon name={'check-circle'} size={35} color='#4f4f4d' />
             <Text style={{ color: '#4f4f4d' }}>Done</Text>
           </TouchableOpacity>
         </View>
@@ -304,9 +321,14 @@ const ViewNote = (props) => {
           </View>
         </View>
         <TouchableOpacity style={styles.imgInputButton} onPress={handleSelectImages}>
-          <Icon name='image-multiple' size={40} color='#3d3d3b'/>
+          <Icon name='image-multiple' size={40} color='#3d3d3b' />
         </TouchableOpacity>
-
+        <ImageView
+          images={imagesView}
+          imageIndex={currentImageIndex}
+          visible={visible}
+          onRequestClose={() => setIsVisible(false)}
+        />
         <View style={styles.imageContainer}>
           {
             previousImages?.map((image, index) => {
@@ -314,6 +336,10 @@ const ViewNote = (props) => {
                 <View key={index}>
                   <TouchableOpacity
                     style={styles.imageUnit}
+                    onPress={() => {
+                      setCurrentImageIndex(index)
+                      setIsVisible(true)
+                    }}
                     onLongPress={() => {
                       return Alert.alert(
                         "Delete Image..!",
@@ -354,6 +380,10 @@ const ViewNote = (props) => {
                   {/* <Avatar.Image size={60} source={{ uri: uri }} key={index} /> */}
                   <TouchableOpacity
                     style={styles.imageUnit}
+                    onPress={() => {
+                      setCurrentImageIndex(index)
+                      setIsVisible(true)
+                    }}
                     onLongPress={() => {
                       return Alert.alert(
                         "Delete Image..!",
@@ -427,11 +457,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '300'
   },
-  imgInputButton: {    
+  imgInputButton: {
     padding: 5,
     marginLeft: 30,
     marginRight: 330,
-    marginVertical: 15,    
+    marginVertical: 15,
   },
   imageDeleteButton: {
     padding: 5
