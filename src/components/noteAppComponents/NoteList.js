@@ -5,7 +5,7 @@ import NoteItem from './NoteItem';
 
 const NoteList = (props) => {
 
-    const { setLoading, refresh, setRefresh, searchQuery } = props
+    const { userId, setLoading, refresh, setRefresh, searchQuery } = props;
 
     const [noteList, setNoteList] = useState([]);
 
@@ -28,6 +28,7 @@ const NoteList = (props) => {
     const searchNotes = async () => {
         await axios.get('api/v1/note/search', {
             params: {
+                userId: userId,
                 searchKeyword: searchQuery,
             }
         })
@@ -41,7 +42,7 @@ const NoteList = (props) => {
 
     const getAllNotes = async () => {
         setLoading(true);
-        await axios.get('api/v1/note/get-all-notes')
+        await axios.get(`api/v1/note/get-all-notes/${userId}`)
             .then(response => {
                 setNoteList(response.data.data);
             })

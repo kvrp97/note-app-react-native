@@ -3,12 +3,12 @@ import React from 'react'
 import { FAB } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-const AddButton = () => {
+const AddButton = ({userId}) => {    
 
     const navigation = useNavigation();
 
     const handleGoToAddNote = ()=>{        
-        navigation.navigate('AddNote');
+        navigation.navigate('AddNote', {userId});
     }
 
     return (
