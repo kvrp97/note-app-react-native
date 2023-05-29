@@ -23,7 +23,7 @@ const Home = ({ refresh, setRefresh, navigation }) => {
       const uData = await AsyncStorage.getItem('nUdata');
       if (uData) {
         const userData = JSON.parse(uData);
-        console.log(userData);
+        // console.log(userData);
         setUserDetails(userData);
       }
     } catch (error) {
@@ -63,8 +63,8 @@ const Home = ({ refresh, setRefresh, navigation }) => {
         {
           text: "Yes",
           onPress: async () => {
-            // await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userDetails, isLogged: false }));
-            await AsyncStorage.removeItem('nUdata');
+            await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userDetails, isLogged: false }));
+            // await AsyncStorage.removeItem('nUdata');
             navigation.goBack();
           },
         },
