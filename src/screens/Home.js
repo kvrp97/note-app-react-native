@@ -28,7 +28,10 @@ const Home = ({ refresh, setRefresh, navigation }) => {
       }
     } catch (error) {
       console.log(error);
-      navigation.goBack();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
     }
   }
 
@@ -65,7 +68,10 @@ const Home = ({ refresh, setRefresh, navigation }) => {
           onPress: async () => {
             await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userDetails, isLogged: false }));
             // await AsyncStorage.removeItem('nUdata');
-            navigation.goBack();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'SignIn' }],
+            });
           },
         },
         {
