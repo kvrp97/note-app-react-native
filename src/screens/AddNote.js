@@ -7,7 +7,9 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Loader from '../components/Loader';
 import axios from 'axios'
 
-const AddNote = ({ navigation, setRefresh }) => {  
+const AddNote = ({ navigation, setRefresh, route }) => {  
+
+  const { userId } = route.params;
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -55,6 +57,7 @@ const AddNote = ({ navigation, setRefresh }) => {
 
   const handleSave = async () => {
     const formData = new FormData();
+    formData.append('userId', userId);
     formData.append('title', title);
     formData.append('description', description);
 

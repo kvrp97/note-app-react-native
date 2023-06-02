@@ -1,5 +1,5 @@
 import { Alert, BackHandler, Keyboard, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputText from '../components/userSignComponents/InputText';
 import Loader from '../components/Loader';
 import Button from '../components/userSignComponents/Button';
@@ -76,15 +76,16 @@ const SignIn = ({ navigation }) => {
           email: '',
           password: ''
         });
-        console.log(response.data.message);
+        
         try {
           await AsyncStorage.setItem('nUdata', JSON.stringify(
             {
-              'userName': response.data.data,
+              'userId': response.data.data.userId,
+              'firstName': response.data.data.firstName,
               'isLogged': true
             }
           ));
-          navigation.navigate('Home');
+          navigation.navigate('Home', response.data.data);
         } catch (error) {
           console.log(error);
           Alert.alert('Error', 'Something went wrong');
