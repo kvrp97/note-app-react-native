@@ -62,7 +62,7 @@ const SignIn = ({ navigation }) => {
     }
   }
 
-  const userSignIn = async () => {   
+  const userSignIn = async () => {
     setLoading(true);
     await axios.post('api/v1/user/login',
       {
@@ -76,7 +76,7 @@ const SignIn = ({ navigation }) => {
           email: '',
           password: ''
         });
-        
+
         try {
           await AsyncStorage.setItem('nUdata', JSON.stringify(
             {
@@ -93,12 +93,12 @@ const SignIn = ({ navigation }) => {
       })
       .catch((error) => {
         setLoading(false);
-        if (error.response.data.statusCode === 401) {
-          Alert.alert('Invalid login credentials!');
+        if (error.response !== undefined) {
+          console.log(error.response.data);
+          Alert.alert('Login Failed!', 'Please enter valid login details');
         } else {
-          Alert.alert('Request failed!');
+          Alert.alert('Request Failed', error.message);
         }
-        console.log(error.response.data);
       });
   }
 
