@@ -44,7 +44,7 @@ const SignUp = ({ navigation }) => {
     }
 
     if (!inputs.lastName) {
-      handleErrorMessage('First name is required', 'lastName');
+      handleErrorMessage('Last name is required', 'lastName');
       valid = false;
     } else if (!inputs.lastName.match(/^[A-Za-z]+$/)) {
       handleErrorMessage('Invalid input', 'lastName');
