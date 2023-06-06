@@ -85,15 +85,20 @@ const SignIn = ({ navigation }) => {
               'isLogged': true
             }
           ));
-          navigation.navigate('Home', response.data.data);
+          navigation.navigate('Home');
         } catch (error) {
           console.log(error);
           Alert.alert('Error', 'Something went wrong');
         }
       })
-      .catch((error) => {        
+      .catch((error) => {
         setLoading(false);
-        Alert.alert('Invalid credentials');
+        if (error.response.data.statusCode === 401) {
+          Alert.alert('Invalid login credentials!');
+        } else {
+          Alert.alert('Request failed!');
+        }
+        console.log(error.response.data);
       });
   }
 
