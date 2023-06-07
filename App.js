@@ -21,6 +21,10 @@ const App = () => {
     authUser();
   }, [])
 
+  const setRefreshToggle = () => {
+    setRefresh(!refresh);
+  }
+
   const authUser = async () => {
     try {
       const userData = await AsyncStorage.getItem('nUdata');
@@ -48,13 +52,13 @@ const App = () => {
               <Stack.Screen name="SignUp" component={SignUp} />
               <Stack.Screen name="SignIn" component={SignIn} />
               <Stack.Screen name="Home">
-                {(props) => <Home {...props} refresh={refresh} setRefresh={setRefresh} />}
+                {(props) => <Home {...props} refresh={refresh} setRefresh={setRefreshToggle} />}
               </Stack.Screen>
               <Stack.Screen name="ViewNote">
-                {(props) => <ViewNote {...props} setRefresh={setRefresh} />}
+                {(props) => <ViewNote {...props} setRefresh={setRefreshToggle} />}
               </Stack.Screen>
               <Stack.Screen name="AddNote">
-                {(props) => <AddNote {...props} setRefresh={setRefresh} />}
+                {(props) => <AddNote {...props} setRefresh={setRefreshToggle} />}
               </Stack.Screen>
             </Stack.Navigator>
         }
