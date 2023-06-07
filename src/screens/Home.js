@@ -105,7 +105,7 @@ const Home = ({ refresh, setRefresh, navigation }) => {
           <ScrollView style={styles.noteListContainer}>
             {
               userDetails.userId &&
-              <NoteList userId={userDetails.userId} searchQuery={searchQuery} refresh={refresh} setRefresh={setRefresh} setLoading={setLoading} />
+              <NoteList userDetails={userDetails} searchQuery={searchQuery} refresh={refresh} setRefresh={setRefresh} setLoading={setLoading} />
             }
           </ScrollView>
           <AddButton userId={userDetails.userId} />

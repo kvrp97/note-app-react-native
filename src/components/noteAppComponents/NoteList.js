@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import NoteItem from './NoteItem';
-
+import { Alert, BackHandler } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const NoteList = (props) => {
 
-    const { userId, setLoading, refresh, setRefresh, searchQuery } = props;
+    const navigation = useNavigation();
+
+    const { userDetails, setLoading, refresh, setRefresh, searchQuery } = props;
 
     const [noteList, setNoteList] = useState([]);
 
@@ -42,12 +46,37 @@ const NoteList = (props) => {
 
     const getAllNotes = async () => {
         setLoading(true);
-        await axios.get(`api/v1/note/get-all-notes/${userId}`)
+        await axios.get(`api/v1/note/get-all-notes/${userDetails.userId}`)
             .then(response => {
                 setNoteList(response.data.data);
             })
             .catch(err => {
-                console.error(err);
+                setLoading(false);
+                console.log(err.message);
+                Alert.alert('Unable to load the notes!', 'Please try again later.',
+                    [
+                        {
+                            text: "Sign Out?",
+                            onPress: async () => {
+                                try {
+                                    const uData = await AsyncStorage.getItem('nUdata');
+                                    const userData = JSON.parse(uData);
+                                    await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userData, 'isLogged': false }));
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'SignIn' }],
+                                    });
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            },
+                        },
+                        {
+                            text: 'Exit App?',
+                            onPress: () => BackHandler.exitApp(),
+                        },
+                    ]
+                );
             })
             .finally(() => {
                 setRefresh(false);
