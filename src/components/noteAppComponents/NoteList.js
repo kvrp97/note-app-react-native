@@ -14,25 +14,17 @@ const NoteList = (props) => {
     const [noteList, setNoteList] = useState([]);
 
     useEffect(() => {
-        getAllNotes();
-    }, [])
-
-    useEffect(() => {
-        getAllNotes();
-    }, [refresh])
-
-    useEffect(() => {
         if (searchQuery.length > 0) {
             searchNotes();
         } else {
             getAllNotes();
         }
-    }, [searchQuery])
+    }, [searchQuery, refresh])
 
     const searchNotes = async () => {
         await axios.get('api/v1/note/search', {
             params: {
-                userId: userId,
+                userId: userDetails.userId,
                 searchKeyword: searchQuery,
             }
         })
@@ -49,39 +41,37 @@ const NoteList = (props) => {
         await axios.get(`api/v1/note/get-all-notes/${userDetails.userId}`)
             .then(response => {
                 setNoteList(response.data.data);
+                setLoading(false);
             })
-            .catch(err => {
+            .catch((err) => {
                 setLoading(false);
                 console.log(err.message);
-                Alert.alert('Unable to load the notes!', 'Please try again later.',
+                return Alert.alert('Oops.! Unable to retrieve data!', err.message,
                     [
                         {
-                            text: "Sign Out?",
-                            onPress: async () => {
-                                try {
-                                    const uData = await AsyncStorage.getItem('nUdata');
-                                    const userData = JSON.parse(uData);
-                                    await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userData, 'isLogged': false }));
-                                    navigation.reset({
-                                        index: 0,
-                                        routes: [{ name: 'SignIn' }],
-                                    });
-                                } catch (error) {
-                                    console.log(error);
-                                }
-                            },
+                            text: 'Sign Out',
+                            onPress: () => {
+                                handleSignOut();
+                            }
                         },
                         {
-                            text: 'Exit App?',
-                            onPress: () => BackHandler.exitApp(),
-                        },
-                    ]
-                );
-            })
-            .finally(() => {
-                setRefresh(false);
-                setLoading(false);
+                            text: 'Exit App',
+                            onPress: () => BackHandler.exitApp()
+                        }
+                    ]);
             });
+    }
+
+    const handleSignOut = async () => {
+        try {
+            await AsyncStorage.setItem('nUdata', JSON.stringify({ ...userDetails, 'isLogged': false }));
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'SignIn' }],
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
